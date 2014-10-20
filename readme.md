@@ -6,7 +6,7 @@ Some of utilities for Polymer.
 
 - `--c, components`
 
-Create a components.js that consisted of vulcanized Polymer/elements in `bower components` which was imported by user applications or elements.
+Create a components.js that is consisted of vulcanized Polymer/elements in `bower components` which was imported by user applications or elements.
 
 - platform
 
