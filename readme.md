@@ -4,11 +4,11 @@ Some of utilities for Polymer.
 
 ## How to
 
-- `--c, components`
+- 'bundle'
 
-Create a components.js that consisted of vulcanized Polymer/elements in `bower components` which was imported by user applications or elements.
+Tie up all Polymer/elements in `bower components` that those files are imported by user applications or elements.
 
-- platform
+- 'platform'
 
 Pack the platform files of Polymer
 

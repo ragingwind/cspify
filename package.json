@@ -1,0 +1,42 @@
+{
+  "name": "polyflow",
+  "version": "0.0.1",
+  "description": "Some of utilities for Polymer.",
+  "main": "polyflow.js",
+  "bin": {
+    "polyflow": "cli.js"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webapplications-kr/polyflow.git"
+  },
+  "keywords": [
+    "Polymer",
+    "WebComponents"
+  ],
+  "author": {
+    "name": "ragingwind",
+    "email": "ragingwind@gmail.com",
+    "url": "http://github.com/ragingwind"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/webapplications-kr/polyflow/issues"
+  },
+  "homepage": "https://github.com/webapplications-kr/polyflow",
+  "dependencies": {
+    "async": "^0.9.0",
+    "benchmark": "^1.0.0",
+    "co": "^3.1.0",
+    "lodash": "^2.4.1",
+    "meow": "^1.0.0",
+    "q": "^1.0.1",
+    "whacko": "^0.17.1"
+  },
+  "devDependencies": {
+    "mocha": "^2.0.1"
+  }
+}

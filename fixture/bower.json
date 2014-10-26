@@ -1,0 +1,8 @@
+{
+  "name": "polyflow test",
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.4.0",
+    "core-elements": "Polymer/core-elements#~0.4.0"
+  },
+  "devDependencies": {}
+}
