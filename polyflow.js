@@ -54,28 +54,61 @@ function Bundler (opts) {
 
   this.opts = opts || {};
 
-  // create a map for components
-  this._components = new PathMap();
+  // initialize source data structure for js/html/style
+  this._datas = {
+    htmls: '',
+    scripts: '',
+    styles: ''
+  };
 
-  // create a output file
-  this._fd = fs.openSync(opts.output, 'w');
+  // create a map for paths
+  this._paths = new PathMap();
+
+
+
+  this.html = whacko.load('<!DOCTYPE html><html><body></body><html>');
 
   // create a write queue
   this._writeq = async.queue(function (task, done) {
-    fs.write(this._fd, task.data, null, null, function(err) {
-      done(err, task);
-    });
+    var $ = task.$;
+    var script = $('script:not([type]):not([src]), script[type="text/javascript"]:not([src])');
+    var element = $('polymer-element:not([assetpath])');
+
+    console.log(script);
+    script.each(function() {
+      this._datas.script += $(this).html();
+      console.log($(this).html());
+    }.bind(this));
+
+    script.remove();
+    $('head').remove();
+    $('link[rel="import"][href]').remove();
+
+    // this.html.add($('body').html());
+    this.html('body').prepend($('body').html());
+    done(null, task);
+
   }.bind(this), opts.workerCount || 4);
 
   // save options
   this._excludes = opts.excludes;
 
-  // create components map
-  this._components.on('erase', function() {
+  // create paths map
+  this._paths.on('erase', function() {
     this.emit('erase');
-    if (this._components.empty()) {
-      fs.closeSync(this._fd);
-      this.emit('fin');
+    if (this._paths.empty()) {
+      // create a output file
+      var html = fs.openSync(this.opts.output, 'w');
+      var script = fs.openSync(this.opts.output + '.js', 'w');
+
+      // writing
+      fs.write(html, this.html.html(), null, null, function(err) {
+        fs.write(script, this._datas.script, null, null, function(err) {
+          fs.closeSync(html);
+          fs.closeSync(script);
+          this.emit('fin');
+        }.bind(this));
+      }.bind(this));
     }
   }.bind(this));
 
@@ -95,17 +128,20 @@ function Bundler (opts) {
 
 util.inherits(Bundler, EventEmitter);
 
+Bundler.prototype._tieupStyle = function (filename, parent) {
+}
+
 Bundler.prototype._import = function (filename, parent) {
   var self = this;
-  var components = self._components;
+  var paths = self._paths;
 
   // exclude the file that already read
-  if (components.find(filename)) {
+  if (paths.find(filename)) {
     return;
   }
 
   // register the file to the list that it will be concatenated with output file
-  components.insert(filename, parent ? 'root' : path.basename(filename) + '|' + parent);
+  paths.insert(filename, parent ? 'root' : path.basename(filename) + '|' + parent);
 
   fs.readFile(filename, 'utf8', function(err, data) {
     if (err) {
@@ -124,7 +160,7 @@ Bundler.prototype._import = function (filename, parent) {
 
     // exclude the file then erase filename on the list
     if (self._excludes.test(filename)) {
-      components.erase(filename);
+      paths.erase(filename);
       return;
     }
 
@@ -132,9 +168,10 @@ Bundler.prototype._import = function (filename, parent) {
     self._writeq.push({
       filename: filename,
       basename: path.basename(filename),
-      data: data
+      $: $,
+      data: data // THINK: delete?
     }, function(err, task) {
-      components.erase(task.filename);
+      paths.erase(task.filename);
       self.emit('writen', task.filename);
     });
   });
@@ -146,14 +183,14 @@ Bundler.prototype.tieup = function () {
 
 function polyflow(action, flags, done) {
   var bundler = new Bundler({
-    excludes: /\/elements\/|polymer.html$/,
+    excludes: /index.html$|\/elements\/|polymer.html$/,
     input: flags.i,
     output: path.resolve(path.dirname(flags.i), flags.o ? flags.o : 'components.html')
   });
 
   bundler.on('fin', function() {
     console.log('GOT SIGNAL, SEND SIGNAL');
-    console.log(bundler.status);
+    // console.log(bundler.status);
     process.exit(0);
   });
 
