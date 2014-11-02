@@ -1,17 +1,36 @@
-# polyflow
+# cspify
 
-Some of utilities for Polymer.
+Utilities for Polymer. cspify extract inline javascript code from the components installed bower path to external script.
 
 ## How to
 
-- 'bundle'
+- cspify anythin
 
-Tie up all Polymer/elements in `bower components` that those files are imported by user applications or elements.
+```
+cspify
+```
 
-- 'platform'
+- with exclusive
 
-Pack the platform files of Polymer
+```
+cspify -e ^demo|^index|^your-exclusive'
+```
 
-- `cspify`
+- cspify specific targets
 
-Extract inline scripts in Polymer/elements which is in `bower components`
+```
+# the components started with paper. paper-elements would be cspified.
+cspify paper-*/*.html'
+cspify paper-*
+
+# started with paper and core. paper-elements and core-elements would be cspified.
+cspify core-* paper-*
+cspify core-*/
+```
+
+- cspify on specific bower path
+
+```
+cspify -b bower_component'
+```
+

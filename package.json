@@ -1,17 +1,17 @@
 {
-  "name": "polyflow",
+  "name": "cspify",
   "version": "0.0.1",
-  "description": "Some of utilities for Polymer.",
-  "main": "polyflow.js",
+  "description": "Extract inline javascript from the components installed in bower to external script",
+  "main": "cspify.js",
   "bin": {
-    "polyflow": "cli.js"
+    "cspify": "cli.js"
   },
   "scripts": {
     "test": "node test.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/webapplications-kr/polyflow.git"
+    "url": "https://github.com/webapplications-kr/cspify.git"
   },
   "keywords": [
     "Polymer",
@@ -24,16 +24,14 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/webapplications-kr/polyflow/issues"
+    "url": "https://github.com/webapplications-kr/cspify/issues"
   },
-  "homepage": "https://github.com/webapplications-kr/polyflow",
+  "homepage": "https://github.com/webapplications-kr/cspify",
   "dependencies": {
     "async": "^0.9.0",
-    "benchmark": "^1.0.0",
-    "co": "^3.1.0",
+    "bower-config": "^0.5.2",
     "lodash": "^2.4.1",
     "meow": "^1.0.0",
-    "q": "^1.0.1",
     "whacko": "^0.17.1"
   },
   "devDependencies": {

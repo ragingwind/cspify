@@ -1,10 +1,10 @@
 'use strict';
 
 var assert = require('assert');
-var polyflow = require('./');
+var cspify = require('./');
 
 it('should componentize ploymer elements', function(done) {
-  var pf = polyflow('bundle', {
+  var pf = cspify('bundle', {
     i: './fixture/index.html'
   }, function() {
     done();
