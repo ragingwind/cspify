@@ -31,17 +31,13 @@ var exclusive = new RegExp(opts.flags.e ? opts.flags.e : '(test|demo|index|pre_c
 var components = [];
 var bowerpath = opts.flags.b ? opts.flags.b : path.join(bowercfg.cwd, bowercfg.directory);
 
-console.log(opts.input, opts.flags);
-
 // all html files under bower path
 if (opts.input.length === 0) {
   opts.input.push('*');
 }
 
 _.forEach(opts.input.slice(0, opts.input.length), function(t) {
-  console.log(t);
   var component = path.join(bowerpath, t, !/.html/.test(t) ? '/*.html' : '');
-  console.log(component);
   _.merge(components, glob.sync(component).filter(function(c) {
     return !exclusive.test(c);
   }));
@@ -51,7 +47,5 @@ if (components.length === 0) {
   console.error('Could find any components');
   return;
 }
-
-console.log(components);
 
 cspify(components, opts.flags);

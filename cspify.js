@@ -95,7 +95,6 @@ Bundler.prototype.import = function (filename) {
   // register the file to the list that will be concatenated with output file
   components.insert(filename);
 
-  console.log('import', filename);
   // read and parse the file
   fs.readFile(filename, 'utf8', function(err, data) {
     if (err) {
