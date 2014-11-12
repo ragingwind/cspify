@@ -5,10 +5,7 @@ var path = require('path');
 var whacko = require('whacko');
 var async = require('async');
 var util = require('util');
-var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
-var bowerConfig = require('bower-config').read();
-var glob = require("glob");
 
 function FilepathMap () {
   this.length = 0;
@@ -62,21 +59,24 @@ util.inherits(Bundler, EventEmitter);
 Bundler.prototype.parseQueuedData = function (task, done) {
   var $ = task.$;
   var $script = $('script:not([type]):not([src]), script[type="text/javascript"]:not([src])');
-  var basename = task.filename.slice(0, task.filename.lastIndexOf('.'));
 
   // getting inline script
   if ($script && $script.length > 0) {
     var scripts = '';
-    var scriptName = basename + '-0.js';
+    var scriptName = path.basename(task.filename, '.html') + '-0.js';
 
     $script.each(function(a) {
       scripts += $($script[a]).html();
     });
 
-    $script.replaceWith('<script src="' + path.basename(scriptName) + '"></script>');
+    // backup origin file
+    fs.writeFileSync(task.filename + '.pre_csp', fs.readFileSync(task.filename), 'utf8');
 
-    fs.writeFileSync(scriptName, scripts, 'utf8');
-    fs.writeFileSync(basename + '-pre_csp.html', fs.readFileSync(task.filename), 'utf8');
+    // replace inline script to outter
+    $script.replaceWith('<script src="' + path.basename(scriptName) + '"></script>');
+    fs.writeFileSync(path.join(path.dirname(task.filename), scriptName), scripts, 'utf8');
+
+    // change the file updated
     fs.writeFileSync(task.filename, $.html(), 'utf8');
   }
 
@@ -98,8 +98,9 @@ Bundler.prototype.import = function (filename) {
   // read and parse the file
   fs.readFile(filename, 'utf8', function(err, data) {
     if (err) {
-      components.erase(filename);
-      console.error('Can not found ', filename);
+      if (components.erase(filename).empty()) {
+        self.emit('fin');
+      }
       return;
     }
 
@@ -117,9 +118,7 @@ Bundler.prototype.import = function (filename) {
       basename: path.basename(filename),
       $: $
     }, function(err, task) {
-      // erase writen component on the list and check queue drained
-      components.erase(task.filename);
-      if (components.empty()) {
+      if (components.erase(task.filename).empty()) {
         self.emit('fin');
       }
     });
@@ -127,18 +126,19 @@ Bundler.prototype.import = function (filename) {
 }
 
 Bundler.prototype.tieup = function () {
-  _.forEach(this.opts.components, function(c) {
+  this.opts.components.forEach(function(c) {
     this.import(c);
   }.bind(this));
 
   return this;
 }
 
-function cspify(components, flags) {
+function cspify(components, done) {
   var bundler = new Bundler({
     components: components
   })
   .on('fin', function() {
+    done();
     process.exit(0);
   })
   .tieup();

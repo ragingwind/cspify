@@ -4,33 +4,41 @@ Utilities for Polymer. cspify extract inline javascript code from the components
 
 ## How to
 
-- cspify anythin
+- cspify all of .html files in your default bower path in relative current path
 
 ```
 cspify
 ```
 
-- with exclusive
+- exclusive with a regexp pattern
 
 ```
 cspify -e ^demo|^index|^your-exclusive'
 ```
 
-- cspify specific targets
+- cspify specific bower path
 
 ```
-# the components started with paper. paper-elements would be cspified.
-cspify paper-*/*.html'
-cspify paper-*
-
-# started with paper and core. paper-elements and core-elements would be cspified.
-cspify core-* paper-*
-cspify core-*/
+cspify -b fixture/bower_components
 ```
 
-- cspify on specific bower path
+## For test
+Follow these steps
 
 ```
-cspify -b bower_component'
-```
+# bower install
 
+cd fixture
+bower install
+
+## run npm test
+
+cd ..
+npm test
+
+or in fixture directory
+
+cspify
+
+## Load this Chrome Apps to your chrome browser
+```

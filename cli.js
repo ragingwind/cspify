@@ -6,46 +6,35 @@ var fs = require('fs');
 var path = require('path');
 var cspify = require('./cspify');
 var meow = require('meow');
-var _ = require('lodash');
 var glob = require("glob");
 var bowercfg = require('bower-config').read();
-var opts = {input: '**', flags: {}};
+var opts = {input: [], flags: {}};
 
-if (process.argv.length > 3) {
-  opts = meow({
-    help: [
-      'Usage',
-      '   cspify [target components pattern]',
-      '   cspify paper-*/*.html',
-      '   cspify core-*/ -e ^demo.html|^index.html',
-      '   cspify -b bower_component',
-      '',
-      'Options',
-      '-b: bower component directory. .bowerrc config will be ignored',
-      '-e: exclusive file. default files pattern is /(test|demo|index).html/'
-    ].join('\n')
-  }, {default: {unknown: true, '--': false}});
-}
+opts = meow({
+  help: [
+    'Usage',
+    '   cspify',
+    '   cspify -b ./fixture/bower_component -e (test|demo|demo2|index).html$',
+    '   cspify -e (test|demo|demo2|index).html$',
+    '',
+    'Options',
+    '-e: exclusive file. default files pattern is /(test|demo|demo2|index).html$/'
+  ].join('\n'),
+  requireInput: false
+}, {default: {unknown: true, '--': false}});
 
-var exclusive = new RegExp(opts.flags.e ? opts.flags.e : '(test|demo|index|pre_csp).html');
+var exclusive = new RegExp(opts.flags.e ? opts.flags.e : '(test|demo|demo2|index).html$');
+var basepath = opts.flags.b ? opts.flags.b : path.join(bowercfg.cwd, bowercfg.directory);
 var components = [];
-var bowerpath = opts.flags.b ? opts.flags.b : path.join(bowercfg.cwd, bowercfg.directory);
 
-// all html files under bower path
-if (opts.input.length === 0) {
-  opts.input.push('*');
-}
-
-_.forEach(opts.input.slice(0, opts.input.length), function(t) {
-  var component = path.join(bowerpath, t, !/.html/.test(t) ? '/*.html' : '');
-  _.merge(components, glob.sync(component).filter(function(c) {
-    return !exclusive.test(c);
-  }));
-});
+var component = path.join(basepath, '**', '*.html');
+components = components.concat(glob.sync(component).filter(function(c) {
+  return !exclusive.test(c);
+}));
 
 if (components.length === 0) {
   console.error('Could find any components');
   return;
 }
 
-cspify(components, opts.flags);
+cspify(components, function() {});
