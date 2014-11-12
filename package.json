@@ -30,6 +30,7 @@
   "dependencies": {
     "async": "^0.9.0",
     "bower-config": "^0.5.2",
+    "glob": "^4.0.6",
     "meow": "^1.0.0",
     "whacko": "^0.17.1"
   },
