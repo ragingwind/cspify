@@ -46,5 +46,3 @@ cspify
 
 ## Load this Chrome Apps to your chrome browser
 ```
-
-![](https://raw.githubusercontent.com/webapplications-kr/cspify/snapshot/snapshot.png)
