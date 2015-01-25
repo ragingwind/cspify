@@ -1,14 +1,16 @@
 # cspify
 
-Utilities for Polymer. cspify extract inline javascript code from the components installed bower path to external script.
+> Utility for Polymer, extract to external script file from embedded javascript code installed at bower path.
 
-## WARNING
+## What for ?
 
-We don't have many test for this. We have tested a simple Chrome Apps in this project. Futhermore this tool still not regiter on npm so you should install manually via github and `npm link`
+Since you make a Chrome App with Polymer, you have two options avoid [CSP](https://developer.chrome.com/extensions/contentSecurityPolicy) issue. On the one hand, using vulcanize. on the other hand that don't use a embedded javascript in elements.
 
-## How to
+`cspity` will be one of the solution. It has introduced by [Chrome Dev Editor](https://github.com/dart-lang/chromedeveditor/blob/738700ea38e9ee8df7f12e8ada1a2af699019317/ide/web/lib/refactor/csp_fixer.dart) to workaround the CSP issue. it works that installing polymer packages via bower, run by `cspify` then you can get two separated html and javascript files that we can use in develop a Chrome App without any CSP issue.
 
-- cspify all of .html files in your default bower path in relative current path
+## Usage
+
+- cspify all of html files in your bower path
 
 ```
 cspify
@@ -20,29 +22,24 @@ cspify
 cspify -e ^demo|^index|^your-exclusive'
 ```
 
-- cspify specific bower path
+- cspify specific path that polymer elements has been installed
 
 ```
 cspify -b fixture/bower_components
 ```
 
-## For test
-Follow these steps
+## Test
+
+For test, you should install polymer elements via bower.
 
 ```
-# bower install
+cd fixture && bower install
+```
 
-cd fixture
-bower install
+Test to run below at root of project
 
-## run npm test
-
-cd ..
+```
 npm test
-
-or in fixture directory
-
-cspify
-
-## Load this Chrome Apps to your chrome browser
 ```
+
+Load the Chrome App under `fixture` to your chrome browser
