@@ -16,13 +16,13 @@ Since you make a Chrome App with Polymer, you have two options avoid [CSP](https
 cspify
 ```
 
-- exclusive with a regexp pattern
+- exclusive the files by regexp pattern. default pattern is `(test|demo|demo2|index).html$` if you pass other regexp pattern it will be overwritten.
 
 ```
-cspify -e ^demo|^index|^your-exclusive'
+cspify -e ^your-exclusive'
 ```
 
-- cspify specific path that polymer elements has been installed
+- change base path that polymer elements has been installed
 
 ```
 cspify -b fixture/bower_components
