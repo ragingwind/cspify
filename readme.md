@@ -1,6 +1,6 @@
 # cspify
 
-> Utility for Polymer, extract to external script file from embedded javascript code installed at bower path.
+> Utility for Polymer, To avoid CSP issue. extract to external script file from embedded javascript code installed at bower path.
 
 ## What for ?
 

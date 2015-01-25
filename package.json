@@ -1,21 +1,23 @@
 {
   "name": "cspify",
   "version": "0.0.1",
-  "description": "Extract inline javascript from the components installed in bower to external script",
-  "main": "cspify.js",
+  "description": "Utility for Polymer, To avoid CSP issue. extract to external script file from embedded javascript code installed at bower path.",
+  "main": "index.js",
   "bin": {
     "cspify": "cli.js"
   },
   "scripts": {
-    "test": "mocha test.js"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/webapplications-kr/cspify.git"
+    "url": "https://github.com/ragingwind/cspify.git"
   },
   "keywords": [
     "Polymer",
-    "WebComponents"
+    "WebComponents",
+    "csp",
+    "cspify"
   ],
   "author": {
     "name": "ragingwind",
@@ -23,10 +25,14 @@
     "url": "http://github.com/ragingwind"
   },
   "license": "MIT",
+  "files": [
+    "index.js",
+    "cli.js"
+  ],
   "bugs": {
-    "url": "https://github.com/webapplications-kr/cspify/issues"
+    "url": "https://github.com/ragingwind/cspify/issues"
   },
-  "homepage": "https://github.com/webapplications-kr/cspify",
+  "homepage": "https://github.com/ragingwind/cspify",
   "dependencies": {
     "async": "^0.9.0",
     "bower-config": "^0.5.2",
