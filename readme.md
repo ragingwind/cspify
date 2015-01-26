@@ -10,6 +10,10 @@ Since you make a Chrome App with Polymer, you have two options avoid [CSP](https
 
 ## Usage
 
+```
+cspify --verbose
+```
+
 - cspify all of html files in your bower path
 
 ```
