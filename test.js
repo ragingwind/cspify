@@ -1,27 +1,24 @@
 'use strict';
 
-process.chdir('fixture');
-
 var path = require('path');
 var assert = require('assert');
 var cspify = require('./');
-var bowercfg = require('bower-config').read();
-var bowerpath = path.join(bowercfg.cwd, bowercfg.directory);
+var bowercfg = require('bower-config');
 var glob = require("glob");
 
-it('should componentize Polymer elements', function(done) {
-  var exclusive = new RegExp('(test|demo|demo2|index).html$');
-  var component = path.join(path.join(bowercfg.cwd, bowercfg.directory), '**', '*.html');
-  var components = glob.sync(component).filter(function(c) {
-    return !exclusive.test(c);
+process.chdir('fixture');
+
+it('should be separated Polymer elements into html/js files', function(done) {
+  var bowerpath = bowercfg.read();
+  var globpattern = path.join(path.join(bowerpath.cwd, bowerpath.directory), '**', '*.html');
+  var components = glob.sync(globpattern).filter(function(c) {
+    return !/(test|demo|demo2|index).html$/.test(c);
   });
 
-  if (components.length === 0) {
-    console.error('Could find any components');
-    return;
-  }
+  assert(components.length > 0, 'components.length should be greater than zero');
 
-  cspify(components, function() {
+  cspify(components, {verbose: true}, function() {
+    // +TODO: add more specific test
     assert(1);
     done();
   });

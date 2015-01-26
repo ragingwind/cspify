@@ -6,6 +6,16 @@ var whacko = require('whacko');
 var async = require('async');
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
+var chalk = require('chalk');
+
+console.verbose = false;
+console.chat = function() {
+  if (console.verbose) {
+    console.log.apply(console, arguments);
+  }
+};
+
+// console.info(chalk.gray('Read component file: ' + chalk.blue.underline.bold(path.basename(filename))));
 
 function FilepathMap () {
   this.length = 0;
@@ -60,24 +70,33 @@ Bundler.prototype.parseQueuedData = function (task, done) {
   var $ = task.$;
   var $script = $('script:not([type]):not([src]), script[type="text/javascript"]:not([src])');
 
-  // getting inline script
+  console.chat(chalk.gray.bold(path.basename(task.filename)), 'is working on');
+
+  // getting embedded script
   if ($script && $script.length > 0) {
     var scripts = '';
     var scriptName = path.basename(task.filename, '.html') + '-0.js';
+
+    console.chat('\tWe found script blocks', chalk.green($script.length));
 
     $script.each(function(a) {
       scripts += $($script[a]).html();
     });
 
     // backup origin file
-    fs.writeFileSync(task.filename + '.pre_csp', fs.readFileSync(task.filename), 'utf8');
+    var backupName = task.filename + '.pre_csp';
+    fs.writeFileSync(backupName, fs.readFileSync(task.filename), 'utf8');
+    console.chat('\tBackup to', chalk.green(path.basename(backupName)));
 
-    // replace inline script to outter
+    // replace embedded script to outter
     $script.replaceWith('<script src="' + path.basename(scriptName) + '"></script>');
     fs.writeFileSync(path.join(path.dirname(task.filename), scriptName), scripts, 'utf8');
+    console.chat('\tExport embedded script to', chalk.green(scriptName));
 
     // change the file updated
     fs.writeFileSync(task.filename, $.html(), 'utf8');
+  } else {
+    console.chat(chalk.red('\tNot found script blocks'));
   }
 
   done(null, task);
@@ -133,16 +152,21 @@ Bundler.prototype.tieup = function () {
   return this;
 }
 
-function cspify(components, done) {
+function cspify(components, opts, done) {
   var bundler = new Bundler({
-    components: components
-  })
-  .on('fin', function() {
+    components: components,
+  }).on('fin', function() {
     done();
     process.exit(0);
   })
-  .tieup();
 
+  // set log option
+  console.verbose = opts.verbose;
+
+  // tie up components
+  bundler.tieup();
+
+  // waiting for process will be done
   process.stdin.resume();
 }
 
