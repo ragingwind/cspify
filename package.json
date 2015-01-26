@@ -1,6 +1,6 @@
 {
   "name": "cspify",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Utility for Polymer, To avoid CSP issue. extract to external script file from embedded javascript code installed at bower path.",
   "main": "index.js",
   "bin": {
