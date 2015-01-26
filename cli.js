@@ -25,14 +25,17 @@ var opts = meow({
 }, {
   default: {
     exclusive: '(test|demo|demo2|index).html$',
-    basepath: path.join(bowercfg.cwd, bowercfg.directory)
+    basepath: path.join(bowercfg.cwd, bowercfg.directory),
+    verbose: false
   }
 });
 
 var components = [];
 var componentsPath = path.join(opts.flags.basepath, '**', '*.html');
+var exclusive = new RegExp(opts.flags.exclusive);
+
 components = components.concat(glob.sync(componentsPath).filter(function(c) {
-  return !opts.flags.exclusive.test(c);
+  return !exclusive.test(c);
 }));
 
 if (components.length === 0) {
@@ -40,6 +43,4 @@ if (components.length === 0) {
   process.exit(-1);
 }
 
-cspify(components, opts, function() {
-  console.debug('fin');
-});
+cspify(components, opts.flags);

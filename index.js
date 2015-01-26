@@ -156,7 +156,9 @@ function cspify(components, opts, done) {
   var bundler = new Bundler({
     components: components,
   }).on('fin', function() {
-    done();
+    if (done) {
+      done();
+    }
     process.exit(0);
   })
 
