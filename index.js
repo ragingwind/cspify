@@ -15,8 +15,6 @@ console.chat = function() {
   }
 };
 
-// console.info(chalk.gray('Read component file: ' + chalk.blue.underline.bold(path.basename(filename))));
-
 function FilepathMap () {
   this.length = 0;
   this.components = {};
